@@ -1,0 +1,39 @@
+From 2e52f0a4b7c99b3fb6ac50bc37cd2daa59f3c34e Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Thu, 19 May 2016 02:46:12 -0400
+Subject: cipher: update openssl API call
+
+Use helper function to retrieve private key instead of struct member directly.
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/src/libnfc-nci/nfc/cipher/cipher.c b/src/libnfc-nci/nfc/cipher/cipher.c
+index 8641eb3..899fc34 100644
+--- a/src/libnfc-nci/nfc/cipher/cipher.c
++++ b/src/libnfc-nci/nfc/cipher/cipher.c
+@@ -61,7 +61,7 @@ void cipher_generate_keys()
+     ecdh_get_localkeys();
+     ecdh_get_randomnonce(cipher_suite.randomNonce_local);
+ 
+-    BN_bn2bin(ecdh_key.privKey_local->priv_key,cipher_suite.privKey);
++    BN_bn2bin(EC_KEY_get0_private_key(ecdh_key.privKey_local),cipher_suite.privKey);
+     BN_bn2bin(ecdh_key.x_a_local,cipher_suite.pubKey_local_x_a);
+     BN_bn2bin(ecdh_key.y_a_local,cipher_suite.pubKey_local_y_a);
+ 
+diff --git a/src/libnfc-nci/nfc/include/cipher.h b/src/libnfc-nci/nfc/include/cipher.h
+index 5227914..6675d7d 100644
+--- a/src/libnfc-nci/nfc/include/cipher.h
++++ b/src/libnfc-nci/nfc/include/cipher.h
+@@ -31,7 +31,6 @@
+ #include <openssl/sha.h>
+ #include <openssl/cmac.h>
+ #include <openssl/bn.h>
+-#include <openssl/ec_lcl.h>
+ #include <openssl/bio.h>
+ #include <openssl/evp.h>
+ #include "data_types.h"
+-- 
+1.9.1
+

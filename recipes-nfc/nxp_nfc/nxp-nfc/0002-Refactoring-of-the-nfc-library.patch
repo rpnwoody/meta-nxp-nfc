@@ -1,0 +1,349 @@
+From f1bc17eac478d9e14045910b2b84d279ec9ece87 Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Fri, 10 Jun 2016 00:05:32 -0400
+Subject: Refactoring of the nfc library
+
+Library name changed from libnfc_nci_linux to libnxp_nfc.
+
+API header files renamed from linux_nfc_api.h and linux_nfc_factory_api.h
+to nxp_nfc.h and nxp_nfc_factory.h, respectively.
+
+TODO: Update docs to reflect new names.
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index 5873a60..a8c023c 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,7 +1,7 @@
+-lib_LTLIBRARIES = libnfc_nci_linux.la
++lib_LTLIBRARIES = libnxp_nfc.la
+ 
+ sbin_PROGRAMS = nfcDemoApp 
+-nfcDemoApp_DEPENDENCIES = libnfc_nci_linux.la
++nfcDemoApp_DEPENDENCIES = libnxp_nfc.la
+ 
+ LDFLAGS = -Bstatic 
+ 
+@@ -14,7 +14,7 @@ nfcDemoApp_FLAGS = -I$(srcdir)/demoapp -I$(srcdir)/src/include
+ AM_CPPFLAGS = \
+ 	-I$(srcdir)/src/include \
+ 	$(INCLUDE_PARAMS) \
+-	$(libnfc_nci_linux_la_FLAGS) \
++	$(libnxp_nfc_la_FLAGS) \
+ 	$(nfcDemoApp_FLAGS)
+ 
+ if LLCP1_3
+@@ -174,19 +174,19 @@ SERVICE_SOURCE := \
+ 	src/service/extns/src/mifare/phFriNfc_MifStdFormat.c \
+ 	src/service/extns/src/mifare/phFriNfc_MifareStdMap.c \
+ 	src/service/extns/src/phNxpExtns.c \
+-	src/service/linux_nfc_api.c \
+-	src/service/linux_nfc_factory_api.c
++	src/service/nxp_nfc.c \
++	src/service/nxp_nfc_factory.c
+ 
+ nfcDemoApp_SOURCES := \
+ 		demoapp/main.c \
+ 		demoapp/tools.c
+ 
+-libnfc_nci_linux_la_SOURCES = \
++libnxp_nfc_la_SOURCES = \
+ 	$(LIBNFC_NCI_SOURCE) \
+ 	$(HALIMPL_SOURCE) \
+ 	$(SERVICE_SOURCE)
+ 
+-include_HEADERS = src/include/linux_nfc_api.h src/include/linux_nfc_factory_api.h
++include_HEADERS = src/include/nxp_nfc.h src/include/nxp_nfc_factory.h
+ 
+ INCLUDE_PARAMS :=$(LIBNFC_NCI_INCLUDE:%=-I$(srcdir)/%)
+ INCLUDE_PARAMS +=$(HALIMPL_INCLUDE:%=-I$(srcdir)/%)
+@@ -197,40 +197,40 @@ PN547C2 := 1
+ PN548C2 := 2
+ PN551C2 := 3
+ 
+-libnfc_nci_linux_la_FLAGS = 
+-libnfc_nci_linux_la_FLAGS += -DPN547C2=1
+-libnfc_nci_linux_la_FLAGS += -DPN548C2=2
+-libnfc_nci_linux_la_FLAGS += -DPN551C2=3
++libnxp_nfc_la_FLAGS =
++libnxp_nfc_la_FLAGS += -DPN547C2=1
++libnxp_nfc_la_FLAGS += -DPN548C2=2
++libnxp_nfc_la_FLAGS += -DPN551C2=3
+ 
+-libnfc_nci_linux_la_FLAGS += -pthread -w -g
+-libnfc_nci_linux_la_FLAGS += -DNFC_NXP_NOT_OPEN_INCLUDED=TRUE
+-libnfc_nci_linux_la_FLAGS += -DNXP_HW_SELF_TEST
+-libnfc_nci_linux_la_FLAGS += -DDEBUG
+-libnfc_nci_linux_la_FLAGS += -DNXP_NFC_NATIVE_ENABLE_HCE=TRUE
++libnxp_nfc_la_FLAGS += -pthread -w -g
++libnxp_nfc_la_FLAGS += -DNFC_NXP_NOT_OPEN_INCLUDED=TRUE
++libnxp_nfc_la_FLAGS += -DNXP_HW_SELF_TEST
++libnxp_nfc_la_FLAGS += -DDEBUG
++libnxp_nfc_la_FLAGS += -DNXP_NFC_NATIVE_ENABLE_HCE=TRUE
+ 
+ if LLCP1_3
+-libnfc_nci_linux_la_FLAGS += -DNFC_NXP_LLCP_SECURED_P2P=TRUE
++libnxp_nfc_la_FLAGS += -DNFC_NXP_LLCP_SECURED_P2P=TRUE
+ else
+-libnfc_nci_linux_la_FLAGS += -DNFC_NXP_LLCP_SECURED_P2P=FALSE
++libnxp_nfc_la_FLAGS += -DNFC_NXP_LLCP_SECURED_P2P=FALSE
+ endif
+ 
+ if PN7120
+-libnfc_nci_linux_la_FLAGS += -DNFC_NXP_CHIP_TYPE=PN547C2 -DNXP_CHIP_NAME=\"pn7120\"
+-libnfc_nci_linux_la_FLAGS += -DPH_NCI_NXP_HAL_ENABLE_FW_DOWNLOAD=FALSE
++libnxp_nfc_la_FLAGS += -DNFC_NXP_CHIP_TYPE=PN547C2 -DNXP_CHIP_NAME=\"pn7120\"
++libnxp_nfc_la_FLAGS += -DPH_NCI_NXP_HAL_ENABLE_FW_DOWNLOAD=FALSE
+ endif
+ 
+ if PN7150
+-libnfc_nci_linux_la_FLAGS += -DNFC_NXP_CHIP_TYPE=PN548C2 -DNXP_CHIP_NAME=\"pn7150\"
+-libnfc_nci_linux_la_FLAGS += -DPH_NCI_NXP_HAL_ENABLE_FW_DOWNLOAD=FALSE
++libnxp_nfc_la_FLAGS += -DNFC_NXP_CHIP_TYPE=PN548C2 -DNXP_CHIP_NAME=\"pn7150\"
++libnxp_nfc_la_FLAGS += -DPH_NCI_NXP_HAL_ENABLE_FW_DOWNLOAD=FALSE
+ endif
+ 
+-libnfc_nci_linux_la_LIBADD = $(AC_LIBOBJS)
+-libnfc_nci_linux_la_LDFLAGS :=
+-libnfc_nci_linux_la_LDFLAGS +=-DPN547C2=1
+-libnfc_nci_linux_la_LDFLAGS +=-DPN548C2=2
+-libnfc_nci_linux_la_LDFLAGS +=-DPN551C2=3
+-libnfc_nci_linux_la_LDFLAGS += -shared -pthread -ldl -lrt -fPIC -release 1 -versionnfo 0:0:0
++libnxp_nfc_la_LIBADD = $(AC_LIBOBJS)
++libnxp_nfc_la_LDFLAGS :=
++libnxp_nfc_la_LDFLAGS +=-DPN547C2=1
++libnxp_nfc_la_LDFLAGS +=-DPN548C2=2
++libnxp_nfc_la_LDFLAGS +=-DPN551C2=3
++libnxp_nfc_la_LDFLAGS += -shared -pthread -ldl -lrt -fPIC -release 1 -versionnfo 0:0:0
+ 
+-nfcDemoApp_LDFLAGS = -pthread -ldl -lrt -lnfc_nci_linux
++nfcDemoApp_LDFLAGS = -pthread -ldl -lrt -lnxp_nfc
+ 
+ 
+diff --git a/configure.ac b/configure.ac
+index af76d8b..b516f25 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2,7 +2,7 @@
+ # Process this file with autoconf to produce a configure script.
+ 
+ AC_PREREQ([2.69])
+-AC_INIT([libnfc_nci_linux], [1.0])
++AC_INIT([nxp_nfc], [1.0])
+ AM_INIT_AUTOMAKE([foreign subdir-objects color-tests])
+ AC_CONFIG_HEADERS([config.h])
+ 
+@@ -39,7 +39,7 @@ AC_FUNC_MALLOC
+ AC_FUNC_REALLOC
+ _AC_FUNC_MALLOC_IF
+ 
+-AC_CHECK_FUNCS([gettimeofday memmove memset strerror strstr])
++AC_CHECK_FUNCS([gettimeofday memmove memset strerror strstr strtol])
+ AC_CHECK_FUNCS([clock_gettime])
+ AC_CHECK_FUNCS([select])
+ AC_CHECK_FUNCS([dlopen])
+diff --git a/demoapp/main.c b/demoapp/main.c
+index cf93eb2..0914800 100644
+--- a/demoapp/main.c
++++ b/demoapp/main.c
+@@ -20,7 +20,7 @@
+ #include <stdlib.h>
+ #include <ctype.h>
+ #include <string.h>
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ #include "tools.h"
+ 
+ typedef enum eDevState
+diff --git a/src/include/linux_nfc_api.h b/src/include/nxp_nfc.h
+similarity index 99%
+rename from src/include/linux_nfc_api.h
+rename to src/include/nxp_nfc.h
+index ea3e1c3..a225d0e 100644
+--- a/src/include/linux_nfc_api.h
++++ b/src/include/nxp_nfc.h
+@@ -16,8 +16,8 @@
+  *
+  ******************************************************************************/
+ 
+-#ifndef __LINUX_NFC_API__H__
+-#define __LINUX_NFC_API__H__
++#ifndef __NXP_NFC__H__
++#define __NXP_NFC__H__
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -769,4 +769,4 @@ extern int nfcLlcp_ConnLessReceiveMessage(unsigned char* msg, unsigned int *leng
+ }
+ #endif
+ 
+-#endif //__LINUX_NFC_API__H__
++#endif //__NXP_NFC__H__
+diff --git a/src/include/linux_nfc_factory_api.h b/src/include/nxp_nfc_factory.h
+similarity index 97%
+rename from src/include/linux_nfc_factory_api.h
+rename to src/include/nxp_nfc_factory.h
+index 23aec3a..5d1ff89 100644
+--- a/src/include/linux_nfc_factory_api.h
++++ b/src/include/nxp_nfc_factory.h
+@@ -16,8 +16,8 @@
+  *
+  ******************************************************************************/
+ 
+-#ifndef _LINUX_NFC_FACTORY_H_
+-#define _LINUX_NFC_FACTORY_H_
++#ifndef _NXP_NFC_FACTORY_H_
++#define _NXP_NFC_FACTORY_H_
+ 
+ #ifdef __cplusplus
+ extern "C" {
+@@ -132,5 +132,5 @@ int nfcFactory_GetMwVersion ();
+ }
+ #endif
+ 
+-#endif /* _LINUX_NFC_FACTORY_H_ */
++#endif /* _NXP_NFC_FACTORY_H_ */
+ 
+diff --git a/src/service/interface/NfcTag.h b/src/service/interface/NfcTag.h
+index 3a817ee..a8766d5 100644
+--- a/src/service/interface/NfcTag.h
++++ b/src/service/interface/NfcTag.h
+@@ -39,7 +39,7 @@
+ extern "C"
+ {
+     #include "nfa_rw_api.h"
+-    #include "linux_nfc_api.h"
++    #include "nxp_nfc.h"
+ }
+ 
+ typedef struct activationParams{
+diff --git a/src/service/interface/RoutingManager.h b/src/service/interface/RoutingManager.h
+index 140b708..0897525 100644
+--- a/src/service/interface/RoutingManager.h
++++ b/src/service/interface/RoutingManager.h
+@@ -41,7 +41,7 @@
+ extern "C"
+ {
+     #include "data_types.h"
+-    #include "linux_nfc_api.h"
++    #include "nxp_nfc.h"
+     #include "nfa_api.h"
+     #include "nfa_ee_api.h"
+ }
+diff --git a/src/service/interface/nativeNdef.h b/src/service/interface/nativeNdef.h
+index 6d682b8..35b4f30 100644
+--- a/src/service/interface/nativeNdef.h
++++ b/src/service/interface/nativeNdef.h
+@@ -19,7 +19,7 @@
+ #define __NATIVE_NDEF__H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/interface/nativeNfcHandover.h b/src/service/interface/nativeNfcHandover.h
+index 97ce09a..df2d69e 100644
+--- a/src/service/interface/nativeNfcHandover.h
++++ b/src/service/interface/nativeNfcHandover.h
+@@ -20,7 +20,7 @@
+ #define __NATIVE_NFC_HANDOVER_H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/interface/nativeNfcLlcp.h b/src/service/interface/nativeNfcLlcp.h
+index 0faa510..2007490 100644
+--- a/src/service/interface/nativeNfcLlcp.h
++++ b/src/service/interface/nativeNfcLlcp.h
+@@ -20,7 +20,7 @@
+ #define __NATIVE_NFC_LLCP_H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/interface/nativeNfcManager.h b/src/service/interface/nativeNfcManager.h
+index 1701652..4c886d9 100644
+--- a/src/service/interface/nativeNfcManager.h
++++ b/src/service/interface/nativeNfcManager.h
+@@ -20,7 +20,7 @@
+ #define __NATIVE_NFCMANAGER_TAG__H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/interface/nativeNfcSnep.h b/src/service/interface/nativeNfcSnep.h
+index 318e4a5..485273f 100644
+--- a/src/service/interface/nativeNfcSnep.h
++++ b/src/service/interface/nativeNfcSnep.h
+@@ -20,7 +20,7 @@
+ #define __NATIVE_NFC_SNEP_H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/interface/nativeNfcTag.h b/src/service/interface/nativeNfcTag.h
+index 34bd7e7..2fab78e 100644
+--- a/src/service/interface/nativeNfcTag.h
++++ b/src/service/interface/nativeNfcTag.h
+@@ -20,7 +20,7 @@
+ #define __NATIVE_NFC_TAG__H__
+ 
+ #include "data_types.h"
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ 
+ #ifdef __cplusplus
+ extern "C" {
+diff --git a/src/service/linux_nfc_api.c b/src/service/nxp_nfc.c
+similarity index 99%
+rename from src/service/linux_nfc_api.c
+rename to src/service/nxp_nfc.c
+index 1d38135..2cc29aa 100644
+--- a/src/service/linux_nfc_api.c
++++ b/src/service/nxp_nfc.c
+@@ -16,7 +16,7 @@
+  *
+  ******************************************************************************/
+ 
+-#include "linux_nfc_api.h"
++#include "nxp_nfc.h"
+ #include "nativeNfcManager.h"
+ #include "nativeNfcTag.h"
+ #include "nativeNfcSnep.h"
+diff --git a/src/service/linux_nfc_factory_api.c b/src/service/nxp_nfc_factory.c
+similarity index 99%
+rename from src/service/linux_nfc_factory_api.c
+rename to src/service/nxp_nfc_factory.c
+index 5c675ec..e3977c4 100644
+--- a/src/service/linux_nfc_factory_api.c
++++ b/src/service/nxp_nfc_factory.c
+@@ -16,7 +16,7 @@
+ 
+ #ifdef NXP_HW_SELF_TEST
+ 
+-#include "linux_nfc_factory_api.h"
++#include "nxp_nfc_factory.h"
+ #include "phNxpNciHal_SelfTest.h"
+ #include "nfa_api.h"
+ 
+-- 
+1.9.1
+

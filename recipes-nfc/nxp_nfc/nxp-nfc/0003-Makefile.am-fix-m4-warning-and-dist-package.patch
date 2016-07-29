@@ -1,0 +1,32 @@
+From 47624e15ea0f5db1651d40712c07282a15def530 Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Thu, 16 Jun 2016 01:09:21 -0400
+Subject: Makefile.am: fix m4 warning and dist package
+
+Fix m4 related warning when running autoreconf.
+
+Also include conf and doc to the dist package.
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index a8c023c..d1566af 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -1,3 +1,5 @@
++ACLOCAL_AMFLAGS = -I m4
++
+ lib_LTLIBRARIES = libnxp_nfc.la
+ 
+ sbin_PROGRAMS = nfcDemoApp 
+@@ -233,4 +235,4 @@ libnxp_nfc_la_LDFLAGS += -shared -pthread -ldl -lrt -fPIC -release 1 -versionnfo
+ 
+ nfcDemoApp_LDFLAGS = -pthread -ldl -lrt -lnxp_nfc
+ 
+-
++EXTRA_DIST = conf doc
+-- 
+1.9.1
+

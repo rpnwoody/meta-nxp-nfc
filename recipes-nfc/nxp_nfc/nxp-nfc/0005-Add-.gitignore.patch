@@ -1,0 +1,79 @@
+From 1df8e102fa9335a24a0dcf680b0704893321abc5 Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Thu, 19 May 2016 02:44:16 -0400
+Subject: Add .gitignore
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..8115d26
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,61 @@
++# Object files
++*.o
++*.ko
++*.obj
++*.elf
++
++# Precompiled Headers
++*.gch
++*.pch
++
++# Libraries
++*.lib
++*.a
++*.la
++*.lo
++
++# Shared objects (inc. Windows DLLs)
++*.dll
++*.so
++*.so.*
++*.dylib
++
++# Executables
++*.exe
++*.out
++*.app
++*.i*86
++*.x86_64
++*.hex
++
++# Debug files
++*.dSYM/
++*.su
++
++# Autotools
++.deps/
++.dirstamp
++Makefile.in
++Makefile
++/aclocal.m4
++/autom4te.cache
++/autoscan.log
++/autoscan-*.log
++/aclocal.m4
++/compile
++/config.guess
++/config.h
++/config.h.in
++/config.h.in~
++/config.log
++/config.status
++/config.sub
++/configure
++/configure.scan
++/depcomp
++/install-sh
++/libtool
++/ltmain.sh
++/m4
++/missing
++/stamp-h1
+-- 
+1.9.1
+

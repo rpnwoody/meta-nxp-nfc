@@ -1,0 +1,57 @@
+From b3244125b6527a25a5655e9b6694fa47e3992431 Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Thu, 28 Jul 2016 14:13:36 -0400
+Subject: update package and lib versions
+
+Package version follows the release version, now at 2.2.
+
+The libnxp_nfc version is starting fresh at 0.0.0, since we're changing
+the library name and versioning convention altoghether.
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index b8b3060..512fad3 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -231,7 +231,9 @@ libnxp_nfc_la_LDFLAGS :=
+ libnxp_nfc_la_LDFLAGS +=-DPN547C2=1
+ libnxp_nfc_la_LDFLAGS +=-DPN548C2=2
+ libnxp_nfc_la_LDFLAGS +=-DPN551C2=3
+-libnxp_nfc_la_LDFLAGS += -shared -pthread -ldl -lrt -fPIC -release 1 -versionnfo 0:0:0
++libnxp_nfc_la_LDFLAGS += \
++	-shared -pthread -ldl -lrt -fPIC \
++	-version-info $(LIBNXP_NFC_CURRENT):$(LIBNXP_NFC_REVISION):$(LIBNXP_NFC_AGE)
+ 
+ nfcDemoApp_LDFLAGS = -pthread -ldl -lrt -lnxp_nfc
+ 
+diff --git a/configure.ac b/configure.ac
+index dd7efd1..f4e1bfd 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -2,10 +2,19 @@
+ # Process this file with autoconf to produce a configure script.
+ 
+ AC_PREREQ([2.69])
+-AC_INIT([nxp_nfc], [1.0])
++AC_INIT([nxp_nfc], [2.2])
+ AM_INIT_AUTOMAKE([foreign subdir-objects color-tests])
+ AC_CONFIG_HEADERS([config.h])
+ 
++# libtool versioning
++LIBNXP_NFC_CURRENT=0
++LIBNXP_NFC_REVISION=0
++LIBNXP_NFC_AGE=0
++
++AC_SUBST(LIBNXP_NFC_CURRENT)
++AC_SUBST(LIBNXP_NFC_REVISION)
++AC_SUBST(LIBNXP_NFC_AGE)
++
+ # Checks for programs.
+ AC_PROG_CXX
+ AC_PROG_CC
+-- 
+1.9.1
+
