@@ -1,0 +1,53 @@
+From ac987442848b1b47411c1b7d97ed4ee0582c6081 Mon Sep 17 00:00:00 2001
+From: Rogerio Nunes <rogerio.nunes@nxp.com>
+Date: Fri, 29 Jul 2016 13:50:36 -0400
+Subject: Makefile.am: preserve LDFLAGS from environment
+
+Upstream status: pending
+
+Signed-off-by: Rogerio Nunes <rogerio.nunes@nxp.com>
+
+diff --git a/Makefile.am b/Makefile.am
+index 243aec0..5ce9b3b 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -5,12 +5,6 @@ lib_LTLIBRARIES = libnxp_nfc.la
+ sbin_PROGRAMS = nfcDemoApp 
+ nfcDemoApp_DEPENDENCIES = libnxp_nfc.la
+ 
+-LDFLAGS = -Bstatic 
+-
+-if LLCP1_3
+-LDFLAGS += $(OPENSSL_LIBS)
+-endif
+-
+ nfcDemoApp_FLAGS = -I$(srcdir)/demoapp -I$(srcdir)/src/include 
+ 
+ AM_CPPFLAGS = \
+@@ -232,14 +226,14 @@ libnxp_nfc_la_FLAGS += -DPH_NCI_NXP_HAL_ENABLE_FW_DOWNLOAD=FALSE
+ endif
+ 
+ libnxp_nfc_la_LIBADD = $(AC_LIBOBJS)
+-libnxp_nfc_la_LDFLAGS :=
+-libnxp_nfc_la_LDFLAGS +=-DPN547C2=1
+-libnxp_nfc_la_LDFLAGS +=-DPN548C2=2
+-libnxp_nfc_la_LDFLAGS +=-DPN551C2=3
+-libnxp_nfc_la_LDFLAGS += \
+-	-shared -pthread -ldl -lrt -fPIC \
+-	-version-info $(LIBNXP_NFC_CURRENT):$(LIBNXP_NFC_REVISION):$(LIBNXP_NFC_AGE)
+-
+-nfcDemoApp_LDFLAGS = -pthread -ldl -lrt -lnxp_nfc
++libnxp_nfc_la_LDFLAGS := -Bstatic
++libnxp_nfc_la_LDFLAGS += -DPN547C2=1
++libnxp_nfc_la_LDFLAGS += -DPN548C2=2
++libnxp_nfc_la_LDFLAGS += -DPN551C2=3
++libnxp_nfc_la_LDFLAGS += -shared -pthread -ldl -lrt -fPIC
++libnxp_nfc_la_LDFLAGS += -version-info $(LIBNXP_NFC_CURRENT):$(LIBNXP_NFC_REVISION):$(LIBNXP_NFC_AGE)
++libnxp_nfc_la_LDFLAGS += $(OPENSSL_LIBS)
++
++nfcDemoApp_LDFLAGS = -Bstatic -pthread -ldl -lrt -lnxp_nfc $(OPENSSL_LIBS)
+ 
+ EXTRA_DIST = conf doc
+-- 
+1.9.1
+

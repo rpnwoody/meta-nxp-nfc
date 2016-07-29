@@ -13,6 +13,7 @@ SRC_URI = " \
     file://0005-Add-.gitignore.patch \
     file://0006-update-package-and-lib-versions.patch \
     file://0007-add-pkg-config-file-support.patch \
+    file://0008-Makefile.am-preserve-LDFLAGS-from-environment.patch \
 "
 SRCREV = "2a9df3868507f4ee228067303b9aef973aa7598b"
 
